@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_schedule"
+            android:icon="@drawable/ic_alarm_add_black_24px"
+            android:title="Schedule Charge"
+            android:checkable="true" />
+        <item
+            android:id="@+id/nav_schedule_hvac"
+            android:icon="@drawable/ic_alarm_add_black_24px"
+            android:title="Schedule HVAC"
+            android:checkable="true" />
+        <item
+            android:id="@+id/nav_vehicle_status"
+            android:icon="@drawable/ic_directions_car_black_24px"
+            android:title="Vehicle Status"
+            android:checkable="true" />
+        <item
+            android:id="@+id/nav_charging_status"
+            android:icon="@drawable/ic_battery_50"
+            android:title="Charging Status"
+            android:checkable="true" />
+        <!--<item-->
+            <!--android:id="@+id/nav_control"-->
+            <!--android:icon="@drawable/ic_menu_slideshow"-->
+            <!--android:title="Control" />-->
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+        <!--<item-->
+            <!--android:id="@+id/nav_settings"-->
+            <!--android:icon="@drawable/ic_menu_manage"-->
+            <!--android:title="Settings" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_feedback"-->
+            <!--android:icon="@drawable/ic_menu_gallery"-->
+            <!--android:title="Send Feedback" />-->
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_send"
+            android:title="About"
+            android:checkable="true" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Logout"
+            android:checkable="false" />
+        <!--<item-->
+            <!--android:id="@+id/nav_debug"-->
+            <!--android:icon="@drawable/ic_menu_manage"-->
+            <!--android:title="Debug" />-->
+    </group>
+
+</menu>

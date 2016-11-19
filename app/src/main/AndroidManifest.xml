@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.opentesla.android">
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- <uses-permission android:name="android.permission.READ_PROFILE" /> -->
+    <!-- <uses-permission android:name="android.permission.READ_CONTACTS" /> -->
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_square"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.opentesla.android.activities.MyTeslaLoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.opentesla.android.activities.TeslaDebugActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.opentesla.android.activities.SplashScreenActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.opentesla.android.activities.MainActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver
+            android:name="com.opentesla.android.backgroundservices.AlarmReceiver"
+            android:process=":remote"
+            />
+        <receiver android:name="com.opentesla.android.backgroundservices.MyBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
+        <service android:name="com.opentesla.android.backgroundservices.BackgroundTaskService" />
+    </application>
+
+</manifest>

@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Ctrl+T</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="preference_file_key">OpenTesla</string>
+    <string name="saved_access_token">saved_access_token</string>
+    <string name="saved_access_token_default"></string>
+    <string name="saved_access_token_type">saved_access_token_type</string>
+    <string name="saved_access_token_type_default"></string>
+
+    <string name="title_activity_configure_charging">ConfigureCharging</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_debug">DebugActivity</string>
+    <string name="debug_wake_car">Wake Car</string>
+    <string name="debug_honk_horn">Honk Horn</string>
+    <string name="debug_flash_lights">Flash Lights</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3377263963641494/8530857967</string>
+
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="splash_text">Loading...</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="loading">Loading...</string>
+    <string name="schedule_charge">Schedule Charge</string>
+    <string name="par_user_vehicle_list">user_vehicle_list</string>
+</resources>
