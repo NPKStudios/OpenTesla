@@ -37,7 +37,6 @@ public class TeslaApiClient {
     private String mUserName;
     private TeslaOauthToken mToken;
     private boolean mLoggedIn;
-    private ArrayList<TeslaVehicle> mTeslaVehicles;
 
     public TeslaApiClient(SharedPreferences sharedPreferences)
     {

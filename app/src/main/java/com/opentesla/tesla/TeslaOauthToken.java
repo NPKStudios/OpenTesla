@@ -40,9 +40,6 @@ public class TeslaOauthToken {
     private long mExpiresIn;
     private long mCreatedAt;
 
-    private SharedPreferences mSharedPref;
-    Context mContext;
-
     //private static final String KEY_FILE = "oauth_key.json";
 
     public TeslaOauthToken()
