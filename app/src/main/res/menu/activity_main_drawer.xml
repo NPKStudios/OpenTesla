@@ -5,6 +5,11 @@
         android:id="@+id/menu_top"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_schedule_list"
+            android:icon="@drawable/ic_alarm_add_black_24px"
+            android:title="Schedule List"
+            android:checkable="true" />
+        <item
             android:id="@+id/nav_schedule"
             android:icon="@drawable/ic_alarm_add_black_24px"
             android:title="Schedule Charge"

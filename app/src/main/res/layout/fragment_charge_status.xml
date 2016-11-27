@@ -104,7 +104,7 @@
                 android:id="@+id/ll_battery_current">
 
                 <TextView
-                    android:text="Battery Current Draw:"
+                    android:text="Battery Current:"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_bc_title"

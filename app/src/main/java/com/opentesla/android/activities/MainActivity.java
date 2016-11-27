@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.opentesla.android.fragments.ScheduleListFragment;
 import com.opentesla.tesla.response.Vehicle;
 import com.opentesla.tesla.TeslaApiClient;
 import com.opentesla.android.fragments.AboutFragment;
@@ -194,6 +195,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_logout:
                 showLogoutAlert(this, "Are you sure you want to logout?");
                 return true;
+            case R.id.nav_schedule_list:
+                fragment = (Fragment) ScheduleListFragment.newInstance();
+                break;
 //                navigate_intent(TeslaDebugActivity.class);
 //                break;
 //            case R.id.nav_debug:
