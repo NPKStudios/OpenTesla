@@ -43,6 +43,7 @@ public class ScheduleListFragment extends Fragment {
     private UserConfig userConfig;
     private SharedPreferences mSharedPreferences;
     ArrayList<DbTask> taskList;
+    TasksDb mTasksDb;
 
     ListView listview;
 
@@ -87,32 +88,31 @@ public class ScheduleListFragment extends Fragment {
         listview = (ListView) v.findViewById(R.id.lv_db_items);
 
         // Add alarm to display in alarmlist
-        taskList = getTasks(v.getContext());
+        taskList = getTasks(v.getContext(), mTasksDb);
         // Create alarm listview adapter with current context (this) and alarmlist
-        TaskAdapter alarmAdapter = new TaskAdapter(v.getContext(), taskList);
+        TaskAdapter alarmAdapter = new TaskAdapter(v.getContext(), taskList, mTasksDb);
 
         // Set previous adapter on listview
         listview.setAdapter(alarmAdapter);
         return v;
     }
 
-    public ArrayList<DbTask> getTasks(Context context)
+    public ArrayList<DbTask> getTasks(Context context, TasksDb tasksDb)
     {
         mSharedPreferences = MySharedPreferences.getSharedPreferences(context);
         userConfig = new UserConfig(mSharedPreferences);
 
         try {
             //Create the database
-            TasksDb mTasksDb = new TasksDb(context);
             if(userConfig.getSelectedVehicleId() != 0) {
-                taskList = mTasksDb.getTasks(userConfig.getSelectedVehicleId());
+                taskList = tasksDb.getTasks(userConfig.getSelectedVehicleId());
                 if(taskList.size() < 1)
                 {
-                    DbTask newTask = mTasksDb.createTask(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName(),
+                    DbTask newTask = tasksDb.createTask(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName(),
                             new
                                     SetChargeLimitRequest(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName() ,80));
 
-                    taskList = mTasksDb.getTasks(userConfig.getSelectedVehicleId());
+                    taskList = tasksDb.getTasks(userConfig.getSelectedVehicleId());
                 }
             }
         }
@@ -133,6 +133,7 @@ public class ScheduleListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mTasksDb = new TasksDb(context);
 //        if (context instanceof OnFragmentInteractionListener) {
 //            mListener = (OnFragmentInteractionListener) context;
 //        } else {
