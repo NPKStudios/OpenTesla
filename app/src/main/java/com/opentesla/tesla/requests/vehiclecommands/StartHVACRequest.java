@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 public class StartHVACRequest extends VehicleJsonPost implements Serializable {
     //https://owner-api.teslamotors.com/api/1/vehicles/vehicle_id/command/auto_conditioning_start
+    public static final String CMD_NAME = "Start HVAC";
     private static final String CMD_STRING = "auto_conditioning_start";
     public StartHVACRequest(long vehicle_id, String vehicle_name)
     {
@@ -35,7 +36,7 @@ public class StartHVACRequest extends VehicleJsonPost implements Serializable {
 
     @Override
     public String getCommandName() {
-        return "Start HVAC";
+        return CMD_NAME;
     }
 
     @Override

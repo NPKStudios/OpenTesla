@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.opentesla.android.UserConfig;
 import com.opentesla.android.database.DbTask;
 import com.opentesla.android.database.TasksDb;
 import com.opentesla.tesla.requests.vehiclecommands.SetChargeLimitRequest;
+import com.opentesla.tesla.requests.vehiclecommands.StartHVACRequest;
 
 import java.util.ArrayList;
 
@@ -42,11 +45,11 @@ public class ScheduleListFragment extends Fragment {
 
     private UserConfig userConfig;
     private SharedPreferences mSharedPreferences;
-    ArrayList<DbTask> taskList;
-    TasksDb mTasksDb;
+    private ArrayList<DbTask> taskList;
+    private TasksDb mTasksDb;
 
-    ListView listview;
-
+    private ListView listview;
+    private TaskAdapter taskAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -84,17 +87,35 @@ public class ScheduleListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_schedule_list, container, false);
+
         // Get listivew from main layout
         listview = (ListView) v.findViewById(R.id.lv_db_items);
 
         // Add alarm to display in alarmlist
         taskList = getTasks(v.getContext(), mTasksDb);
         // Create alarm listview adapter with current context (this) and alarmlist
-        TaskAdapter alarmAdapter = new TaskAdapter(v.getContext(), taskList, mTasksDb);
-
+        taskAdapter = new TaskAdapter(v.getContext(), taskList, mTasksDb);
+        setup_fab(v,taskAdapter);
         // Set previous adapter on listview
-        listview.setAdapter(alarmAdapter);
+        listview.setAdapter(taskAdapter);
         return v;
+    }
+    public void addTask(View v) {
+        DbTask newTask = mTasksDb.createTask(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName(),
+                new StartHVACRequest(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName()));
+        taskAdapter.addTask(newTask);
+    }
+    private void setup_fab(View v, final TaskAdapter adapter)
+    {
+        FloatingActionButton fab = (FloatingActionButton)v.findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DbTask newTask = mTasksDb.createTask(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName(),
+                        new StartHVACRequest(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName()));
+                adapter.addTask(newTask);
+            }
+        });
     }
 
     public ArrayList<DbTask> getTasks(Context context, TasksDb tasksDb)

@@ -134,17 +134,6 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener {
                         DbTaskScheduler.cancelAlarm(getActivity(), mTask);
                     }
                 }
-//                try {
-//                    int percent = seekBar.getProgress() * 10;
-//                    ((SetChargeLimitRequest) mTask.getTask()).setPercent(percent);
-//                    mTasksDb.updateTask(mTask);
-//                    //Toast.makeText(seekBar.getContext(), "Charge limit set to: " + percent +  "%", Toast.LENGTH_LONG).show();
-//
-//                }
-//                catch(Exception e)
-//                {
-//                    Log.e(TAG, e.getLocalizedMessage());
-//                }
             }
         });
 
