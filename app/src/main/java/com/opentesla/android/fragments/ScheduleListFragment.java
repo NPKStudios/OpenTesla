@@ -34,6 +34,8 @@ import java.util.ArrayList;
  */
 public class ScheduleListFragment extends Fragment {
     private static final String TAG = ScheduleListFragment.class.getSimpleName();
+
+    private static final String TITLE = "Schedule";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -87,7 +89,7 @@ public class ScheduleListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_schedule_list, container, false);
-
+        getActivity().setTitle(TITLE);
         // Get listivew from main layout
         listview = (ListView) v.findViewById(R.id.lv_db_items);
 
