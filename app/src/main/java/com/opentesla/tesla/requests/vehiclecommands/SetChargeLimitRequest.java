@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 
 public class SetChargeLimitRequest extends VehicleJsonPost implements Serializable {
+    public static final String CMD_NAME = "Set Charge Limit";
     private static final String CMD_set_charge_limit= "set_charge_limit";
     private static final int PERCENT_DEFAULT = 80;
     public static final int PERCENT_MIN = 50;
@@ -61,7 +62,11 @@ public class SetChargeLimitRequest extends VehicleJsonPost implements Serializab
 
     @Override
     public String getCommandName() {
-        return "Set Charge Limit";
+        return CMD_NAME;
+    }
+    @Override
+    public String getCommandDescription() {
+        return "Set charge limit for " + getVehicle_name() + " to " + percent + "%";
     }
 
     public void setPercent(int percent) {

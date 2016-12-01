@@ -9,8 +9,9 @@ import java.io.Serializable;
  */
 
 public class DoorUnlockRequest extends VehicleJsonPost implements Serializable {
+    public static final String CMD_NAME = "Unlock Doors";
     private static final String CMD_door_unlock = "door_unlock";
-    DoorUnlockRequest(long vehicle_id, String vehicle_name)
+    public DoorUnlockRequest(long vehicle_id, String vehicle_name)
     {
         super(vehicle_id, vehicle_name);
     }
@@ -36,7 +37,10 @@ public class DoorUnlockRequest extends VehicleJsonPost implements Serializable {
     public String getCommandName() {
         return "Unlock Doors";
     }
-
+    @Override
+    public String getCommandDescription() {
+        return "Unlock " + getVehicle_name();
+    }
     @Override
     public String getUrlString() {
         return getUrl_vehicle_cmd(getVehicle_id(), CMD_door_unlock);

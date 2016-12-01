@@ -7,10 +7,12 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.opentesla.tesla.requests.ChargeStateRequest;
 import com.opentesla.android.R;
+import com.opentesla.tesla.response.ChargeState;
 import com.opentesla.webtask.GetJsonAsyncTask;
 import com.opentesla.webtask.OnTaskDoneListener;
 
@@ -36,7 +38,15 @@ public class ChargeStatusFragment extends Fragment {
     private String mOauthToken;
     private long mVehicleID;
     private ChargeStateRequest mChargeState;
+
     private TextView mTvStatus;
+
+    private TextView tv_battery_rated;
+    private TextView tv_battery_percent;
+    private TextView tv_battery_heater;
+    private TextView tv_battery_current;
+
+    private SeekBar sb_battery_percent;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -81,6 +91,11 @@ public class ChargeStatusFragment extends Fragment {
         getActivity().setTitle(TITLE);
 
         mTvStatus = (TextView) v.findViewById(R.id.textView_status);
+        tv_battery_rated = (TextView) v.findViewById(R.id.tv_battery_rated);
+        tv_battery_percent = (TextView) v.findViewById(R.id.tv_battery_percent);
+        tv_battery_heater = (TextView) v.findViewById(R.id.tv_battery_heater);
+        tv_battery_current = (TextView) v.findViewById(R.id.tv_battery_current);
+        sb_battery_percent = (SeekBar) v.findViewById(R.id.sb_battery_percent);
         UpdateGui();
         return v;
 
@@ -96,16 +111,30 @@ public class ChargeStatusFragment extends Fragment {
     public void UpdateGui()
     {
         String urlString = mChargeState.getUrlString();
-        GetJsonAsyncTask vehicleTask = new GetJsonAsyncTask(urlString, mOauthToken, new UpdateChargeState());
+        GetJsonAsyncTask vehicleTask = new GetJsonAsyncTask(urlString, mOauthToken, new UpdateChargeStateGui());
         vehicleTask.execute();
     }
 
-    public class UpdateChargeState implements OnTaskDoneListener {
+    public class UpdateChargeStateGui implements OnTaskDoneListener {
         @Override
         public void onTaskDone(JSONObject responseData) {
             if(mChargeState.processJsonResponse(responseData) == true)
             {
+                ChargeState state = mChargeState.getChargeState();
                 mTvStatus.setText(mChargeState.getChargeState().toString());
+                tv_battery_rated.setText(Double.toString(state.getBattery_range()));
+                tv_battery_percent.setText(Double.toString(state.getBattery_level()) + '%');
+                sb_battery_percent.setProgress((int)state.getBattery_level());
+                tv_battery_current.setText(Double.toString(state.getBattery_current()) + " A");
+
+                if(state.isBattery_heater_on())
+                {
+                    tv_battery_heater.setText("On");
+                }
+                else
+                {
+                    tv_battery_heater.setText("Off");
+                }
             }
             else
             {

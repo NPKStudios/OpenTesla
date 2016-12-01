@@ -21,7 +21,7 @@ public class UserConfig {
     }
     public String getSelectedVehicleIdString()
     {
-        return "" + (long)LoadSharedPreference(sharedPreferences, SP_SELECTED_VEHICLE_ID, (long)0);
+        return "" + LoadSharedPreference(sharedPreferences, SP_SELECTED_VEHICLE_ID, (long)0);
     }
     public long getSelectedVehicleId()
     {

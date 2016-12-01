@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.opentesla.android.fragments.ScheduleListFragment;
 import com.opentesla.tesla.response.Vehicle;
 import com.opentesla.tesla.TeslaApiClient;
 import com.opentesla.android.fragments.AboutFragment;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity
                 fragmentManager = getFragmentManager();
                 String token = mTeslaClient.getOauthTokenString();
 
-                Fragment f = ScheduleFragment.newInstance(token, userConfig.getSelectedVehicleId());
+                Fragment f = ScheduleListFragment.newInstance();
                 set_fragment(f);
             }
         }
@@ -150,22 +151,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-    /*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    */
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -176,24 +161,21 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         //FragmentManager fragmentManager = getFragmentManager(); // For AppCompat use getSupportFragmentManager
         switch(id) {
-            case R.id.nav_schedule:
-                fragment = (Fragment) ScheduleFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
-                break;
-            case R.id.nav_schedule_hvac:
-                fragment = (Fragment) ScheduleHVACFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
-                break;
             case R.id.nav_vehicle_status:
-                fragment = (Fragment) VehicleStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
+                fragment = VehicleStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
                 break;
             case R.id.nav_charging_status:
-                fragment = (Fragment) ChargeStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
+                fragment = ChargeStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
                 break;
             case R.id.nav_about:
-                fragment = (Fragment) AboutFragment.newInstance();
+                fragment = AboutFragment.newInstance();
                 break;
             case R.id.nav_logout:
                 showLogoutAlert(this, "Are you sure you want to logout?");
                 return true;
+            case R.id.nav_schedule_list:
+                fragment = ScheduleListFragment.newInstance();
+                break;
 //                navigate_intent(TeslaDebugActivity.class);
 //                break;
 //            case R.id.nav_debug:
