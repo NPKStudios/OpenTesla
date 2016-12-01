@@ -64,6 +64,10 @@ public class SetChargeLimitRequest extends VehicleJsonPost implements Serializab
     public String getCommandName() {
         return CMD_NAME;
     }
+    @Override
+    public String getCommandDescription() {
+        return "Set charge limit for " + getVehicle_name() + " to " + percent + "%";
+    }
 
     public void setPercent(int percent) {
         if(percent > PERCENT_MAX && percent < PERCENT_MIN) {

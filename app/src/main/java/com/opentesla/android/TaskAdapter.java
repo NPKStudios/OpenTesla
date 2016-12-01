@@ -26,8 +26,11 @@ import android.widget.TimePicker;
 import com.opentesla.android.database.DbTask;
 import com.opentesla.android.database.TasksDb;
 import com.opentesla.tesla.requests.VehicleJsonPost;
+import com.opentesla.tesla.requests.vehiclecommands.DoorLockRequest;
+import com.opentesla.tesla.requests.vehiclecommands.DoorUnlockRequest;
 import com.opentesla.tesla.requests.vehiclecommands.SetChargeLimitRequest;
 import com.opentesla.tesla.requests.vehiclecommands.StartHVACRequest;
+import com.opentesla.tesla.requests.vehiclecommands.StopHVACRequest;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +45,9 @@ import java.util.Set;
 public class TaskAdapter extends BaseAdapter {
     private static final int TASK_CHARGE = 0;
     private static final int TASK_HVAC_ON = 1;
+    private static final int TASK_HVAC_OFF = 2;
+    private static final int TASK_UNLOCK = 3;
+    private static final int TASK_LOCK = 4;
 
     Context context;
     ArrayList<DbTask> tasks;
@@ -90,6 +96,13 @@ public class TaskAdapter extends BaseAdapter {
         // I assume that your alarm data correspond to an object name AlarmData
         final DbTask task = tasks.get(position);
 
+        if(task.getTask() == null)
+        {
+            task.setTask(new StartHVACRequest(task.getVehicleId(), task.getVehicleName()));
+            task.setEnable(false);
+            updateTask(task);
+        }
+
         //DbTask alarmData = (DbTask)getItem(position);
         SimpleDateFormat sdf;
         View rootView = convertView;
@@ -134,11 +147,14 @@ public class TaskAdapter extends BaseAdapter {
         List<String> l=new ArrayList<String>();
         l.add(SetChargeLimitRequest.CMD_NAME);
         l.add(StartHVACRequest.CMD_NAME);
+        l.add(StopHVACRequest.CMD_NAME);
+        l.add(DoorUnlockRequest.CMD_NAME);
+        l.add(DoorLockRequest.CMD_NAME);
         return l;
     }
     protected void setup_label_task(final View view, TextView tv_task, final DbTask task, final List<String> commands)
     {
-        tv_task.setText(task.getTask().getCommandName());
+        tv_task.setText("Task: " + task.getTask().getCommandDescription());
         tv_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,16 +192,23 @@ public class TaskAdapter extends BaseAdapter {
                         switch (position) {
                             case TASK_CHARGE:
                                 show_charge_dialog(view,task);
-                                updateTask(task);
                                 break;
                             case TASK_HVAC_ON:
                                 task.setTask(new StartHVACRequest(task.getVehicleId(), task.getVehicleName()));
-                                updateTask(task);
+                                break;
+                            case TASK_HVAC_OFF:
+                                task.setTask(new StopHVACRequest(task.getVehicleId(), task.getVehicleName()));
+                                break;
+                            case TASK_UNLOCK:
+                                task.setTask(new DoorUnlockRequest(task.getVehicleId(), task.getVehicleName()));
+                                break;
+                            case TASK_LOCK:
+                                task.setTask(new DoorLockRequest(task.getVehicleId(), task.getVehicleName()));
                                 break;
                             default:
                                 break;
                         }
-
+                        updateTask(task);
                         selectDialog.dismiss();
                     }
                 });

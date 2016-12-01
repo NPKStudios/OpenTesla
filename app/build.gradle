@@ -7,7 +7,7 @@ android {
         applicationId 'com.opentesla.android'
         minSdkVersion 21
         targetSdkVersion 24
-        versionName '1.0.1'
+        versionName '1.1.0'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         versionCode 1
     }
@@ -24,8 +24,8 @@ android {
             proguardFile 'proguard-android.txt'
             targetSdkVersion 24
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 2
-            versionName '1.0.1'
+            versionCode 3
+            versionName '1.1.0'
         }
     }
 }

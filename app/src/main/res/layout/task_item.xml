@@ -66,20 +66,12 @@
         android:layout_weight="1">
 
         <TextView
-            android:text="Task: "
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_task_label"
-            android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionMode.Title"
-            android:layout_weight="3" />
-
-        <TextView
             android:text="TaskClassType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tv_task"
             android:textAppearance="@android:style/TextAppearance.Material.Widget.ActionMode.Title"
-            android:layout_weight="1" />
+            />
     </LinearLayout>
 
 </LinearLayout>

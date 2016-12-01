@@ -38,7 +38,10 @@ public class StartHVACRequest extends VehicleJsonPost implements Serializable {
     public String getCommandName() {
         return CMD_NAME;
     }
-
+    @Override
+    public String getCommandDescription() {
+        return "Start HVAC For " + getVehicle_name();
+    }
     @Override
     public String getUrlString() {
         return getUrl_vehicle_cmd(getVehicle_id(), CMD_STRING);
