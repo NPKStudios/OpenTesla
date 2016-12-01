@@ -135,9 +135,7 @@ public class TeslaOauthToken {
     {
         Long tsLong = System.currentTimeMillis()/1000;
         Long expLong = getCreatedAt() + getExpiresIn();
-        if(tsLong > expLong) //If the current time is past the expired time
-            return true;
-        return false;
+        return tsLong > expLong;
     }
 
 }

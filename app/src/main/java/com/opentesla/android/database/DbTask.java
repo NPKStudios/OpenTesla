@@ -259,12 +259,7 @@ public class DbTask {
 
     private boolean intToBool(int i)
     {
-        if(i == FALSE) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return i != FALSE;
     }
 
     private int boolToInt(boolean b)

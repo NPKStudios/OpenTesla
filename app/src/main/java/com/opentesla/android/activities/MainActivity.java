@@ -162,19 +162,19 @@ public class MainActivity extends AppCompatActivity
         //FragmentManager fragmentManager = getFragmentManager(); // For AppCompat use getSupportFragmentManager
         switch(id) {
             case R.id.nav_vehicle_status:
-                fragment = (Fragment) VehicleStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
+                fragment = VehicleStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
                 break;
             case R.id.nav_charging_status:
-                fragment = (Fragment) ChargeStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
+                fragment = ChargeStatusFragment.newInstance(mTeslaClient.getOauthTokenString(), userConfig.getSelectedVehicleId());
                 break;
             case R.id.nav_about:
-                fragment = (Fragment) AboutFragment.newInstance();
+                fragment = AboutFragment.newInstance();
                 break;
             case R.id.nav_logout:
                 showLogoutAlert(this, "Are you sure you want to logout?");
                 return true;
             case R.id.nav_schedule_list:
-                fragment = (Fragment) ScheduleListFragment.newInstance();
+                fragment = ScheduleListFragment.newInstance();
                 break;
 //                navigate_intent(TeslaDebugActivity.class);
 //                break;

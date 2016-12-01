@@ -54,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     }
     public Context getContext() {
-        return (Context)this;
+        return this;
     }
 
 
