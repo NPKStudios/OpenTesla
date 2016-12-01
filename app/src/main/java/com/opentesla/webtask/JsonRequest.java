@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 
 public interface JsonRequest extends Serializable {
-    public RequestType getRequestType();
-    public String getUrlString();
-    public boolean processJsonResponse(JSONObject response);
+    RequestType getRequestType();
+    String getUrlString();
+    boolean processJsonResponse(JSONObject response);
 }

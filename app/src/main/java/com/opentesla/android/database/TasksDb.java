@@ -40,7 +40,7 @@ public class TasksDb {
     public void ResetDatabase()
     {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        mDbHelper.onUpgrade(db, mDbHelper.DATABASE_VERSION, mDbHelper.DATABASE_VERSION);
+        mDbHelper.onUpgrade(db, TasksDbHelper.DATABASE_VERSION, TasksDbHelper.DATABASE_VERSION);
         db.close();
     }
 

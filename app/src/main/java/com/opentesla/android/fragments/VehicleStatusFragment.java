@@ -75,7 +75,7 @@ public class VehicleStatusFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View v = inflater.inflate(R.layout.fragment_charge_status, container, false);
+        View v = inflater.inflate(R.layout.fragment_vehicle_status, container, false);
         getActivity().setTitle(TITLE);
         mTvStatus = (TextView) v.findViewById(R.id.textView_status);
         UpdateGui();

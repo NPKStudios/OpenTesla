@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
 
     <group
         android:id="@+id/menu_top"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_schedule"
+            android:id="@+id/nav_schedule_list"
             android:icon="@drawable/ic_alarm_add_black_24px"
-            android:title="Schedule Charge"
-            android:checkable="true" />
-        <item
-            android:id="@+id/nav_schedule_hvac"
-            android:icon="@drawable/ic_alarm_add_black_24px"
-            android:title="Schedule HVAC"
+            android:title="Schedule"
             android:checkable="true" />
         <item
             android:id="@+id/nav_vehicle_status"
@@ -29,18 +26,17 @@
             <!--android:icon="@drawable/ic_menu_slideshow"-->
             <!--android:title="Control" />-->
     </group>
-
     <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="single">
         <!--<item-->
-            <!--android:id="@+id/nav_settings"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Settings" />-->
+        <!--android:id="@+id/nav_settings"-->
+        <!--android:icon="@drawable/ic_menu_manage"-->
+        <!--android:title="Settings" />-->
         <!--<item-->
-            <!--android:id="@+id/nav_feedback"-->
-            <!--android:icon="@drawable/ic_menu_gallery"-->
-            <!--android:title="Send Feedback" />-->
+        <!--android:id="@+id/nav_feedback"-->
+        <!--android:icon="@drawable/ic_menu_gallery"-->
+        <!--android:title="Send Feedback" />-->
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_send"
@@ -52,9 +48,9 @@
             android:title="Logout"
             android:checkable="false" />
         <!--<item-->
-            <!--android:id="@+id/nav_debug"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Debug" />-->
+        <!--android:id="@+id/nav_debug"-->
+        <!--android:icon="@drawable/ic_menu_manage"-->
+        <!--android:title="Debug" />-->
     </group>
 
 </menu>

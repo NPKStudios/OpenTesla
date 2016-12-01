@@ -52,6 +52,7 @@ public abstract class VehicleJsonPost extends TeslaJsonRequest implements Serial
     public abstract String getBody();
     public abstract String getResultString();
     public abstract String getCommandName();
+    public abstract String getCommandDescription();
 
     @Override
     public boolean processJsonResponse(JSONObject response) {

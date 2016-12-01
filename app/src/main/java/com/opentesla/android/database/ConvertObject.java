@@ -42,7 +42,7 @@ public class ConvertObject {
             bais = new ByteArrayInputStream(convertObject);
 
             ins = new ObjectInputStream(bais);
-            objSimpleExample = (Object) ins.readObject();
+            objSimpleExample = ins.readObject();
 
             ins.close();
 
