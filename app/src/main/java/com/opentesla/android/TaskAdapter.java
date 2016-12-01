@@ -1,6 +1,7 @@
 package com.opentesla.android;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -98,7 +100,7 @@ public class TaskAdapter extends BaseAdapter {
         TextView tv_time = (TextView) rootView.findViewById(R.id.tv_time);
         Switch s_enable = (Switch) rootView.findViewById(R.id.s_enable);
         final TextView tv_label = (TextView) rootView.findViewById(R.id.et_label);
-        Spinner spinner_tasks = (Spinner) rootView.findViewById(R.id.spinner_tasks);
+        TextView tv_task = (TextView) rootView.findViewById(R.id.tv_task);
         Button btn_delete = (Button) rootView.findViewById(R.id.btn_delete);
 
 
@@ -110,7 +112,8 @@ public class TaskAdapter extends BaseAdapter {
         setup_time(parent,tv_time,task,false);
         setup_enable_button(parent, s_enable, task);
         setup_label(parent, tv_label, task);
-        setup_spinner_tasks(parent, spinner_tasks, task, list);
+        setup_label_task(parent,tv_task,task, list);
+        //setup_spinner_tasks(parent, spinner_tasks, task, list);
 
 
 
@@ -132,6 +135,75 @@ public class TaskAdapter extends BaseAdapter {
         l.add(SetChargeLimitRequest.CMD_NAME);
         l.add(StartHVACRequest.CMD_NAME);
         return l;
+    }
+    protected void setup_label_task(final View view, TextView tv_task, final DbTask task, final List<String> commands)
+    {
+        tv_task.setText(task.getTask().getCommandName());
+        tv_task.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog selectDialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setTitle("Select Command");
+
+                ListView modeList = new ListView(view.getContext());
+                final ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, commands);
+
+                modeList.setAdapter(modeAdapter);
+
+
+                builder.setView(modeList);
+//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                selectDialog = builder.create();
+                modeList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                            long arg3)
+                    {
+                        switch (position) {
+                            case TASK_CHARGE:
+                                show_charge_dialog(view,task);
+                                updateTask(task);
+                                break;
+                            case TASK_HVAC_ON:
+                                task.setTask(new StartHVACRequest(task.getVehicleId(), task.getVehicleName()));
+                                updateTask(task);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        selectDialog.dismiss();
+                    }
+                });
+                selectDialog.show();
+            }
+        });
+//        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+//        builder.setTitle("Select Color Mode");
+//
+//        ListView modeList = new ListView(view.getContext());
+//        String[] stringArray = new String[] { "Bright Mode", "Normal Mode" };
+//        ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, stringArray);
+//        modeList.setAdapter(modeAdapter);
+//
+//        builder.setView(modeList);
+//        final Dialog dialog = builder.create();
+//
+//        dialog.show();
     }
     protected void setup_spinner_tasks(View v, Spinner spinner, final DbTask task, List<String> spinnerList)
     {
@@ -266,7 +338,6 @@ public class TaskAdapter extends BaseAdapter {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
-                long i = task.get_id();
                 task.setEnable(isChecked);
                 if (task.getEnable() == true) {
                     enableTask(parent, task);
@@ -347,7 +418,7 @@ public class TaskAdapter extends BaseAdapter {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                task.setTask(new SetChargeLimitRequest(task.get_id(),task.getVehicleName(), sb_percent.getProgress()*10));
+                task.setTask(new SetChargeLimitRequest(task.getVehicleId(),task.getVehicleName(), sb_percent.getProgress()*10));
                 updateTask(task);
                 parent.refreshDrawableState();
             }

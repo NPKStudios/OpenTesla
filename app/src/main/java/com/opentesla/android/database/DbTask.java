@@ -169,6 +169,10 @@ public class DbTask {
     {
         return mVehicle_name;
     }
+    public long getVehicleId()
+    {
+        return mVehicle_id;
+    }
     public Calendar getScheduleCalendar()
     {
         Calendar calendar = Calendar.getInstance();
