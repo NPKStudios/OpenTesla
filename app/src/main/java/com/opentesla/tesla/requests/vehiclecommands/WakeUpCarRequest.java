@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 
 public class WakeUpCarRequest extends VehicleJsonPost implements Serializable {
+    public static final String CMD_NAME = "Wake Vehicle";
     private static final String CMD_WAKE_UP = "wake_up";
     public WakeUpCarRequest(long vehicle_id, String vehicle_name)
     {
@@ -34,7 +35,11 @@ public class WakeUpCarRequest extends VehicleJsonPost implements Serializable {
 
     @Override
     public String getCommandName() {
-        return "Wake Up";
+        return CMD_NAME;
+    }
+    @Override
+    public String getCommandDescription() {
+        return "Wake up " + getVehicle_name();
     }
 
     @Override

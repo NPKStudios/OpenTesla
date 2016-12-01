@@ -125,6 +125,14 @@ public class DbTask {
     {
         m_id = id;
     }
+    public String get_label()
+    {
+        return mlabel;
+    }
+    public void set_label(String new_label)
+    {
+        mlabel = new_label;
+    }
     public ContentValues getContentValues()
     {
         ContentValues values = new ContentValues();
@@ -156,6 +164,14 @@ public class DbTask {
     public boolean getRepeat()
     {
         return mRepeat;
+    }
+    public String getVehicleName()
+    {
+        return mVehicle_name;
+    }
+    public long getVehicleId()
+    {
+        return mVehicle_id;
     }
     public Calendar getScheduleCalendar()
     {
@@ -243,12 +259,7 @@ public class DbTask {
 
     private boolean intToBool(int i)
     {
-        if(i == FALSE) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return i != FALSE;
     }
 
     private int boolToInt(boolean b)
