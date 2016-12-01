@@ -154,7 +154,7 @@ public class TaskAdapter extends BaseAdapter {
     }
     protected void setup_label_task(final View view, TextView tv_task, final DbTask task, final List<String> commands)
     {
-        tv_task.setText("Task: " + task.getTask().getCommandDescription());
+        tv_task.setText(task.getTask().getCommandDescription());
         tv_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
