@@ -25,6 +25,7 @@ import android.widget.TimePicker;
 
 import com.opentesla.android.database.DbTask;
 import com.opentesla.android.database.TasksDb;
+import com.opentesla.android.dialogs.CreateTaskDialog;
 import com.opentesla.tesla.requests.VehicleJsonPost;
 import com.opentesla.tesla.requests.vehiclecommands.DoorLockRequest;
 import com.opentesla.tesla.requests.vehiclecommands.DoorUnlockRequest;
@@ -43,24 +44,18 @@ import java.util.Set;
  * Created by Nick on 11/25/2016.
  */
 public class TaskAdapter extends BaseAdapter {
-    private static final int TASK_CHARGE = 0;
-    private static final int TASK_HVAC_ON = 1;
-    private static final int TASK_HVAC_OFF = 2;
-    private static final int TASK_UNLOCK = 3;
-    private static final int TASK_LOCK = 4;
 
     Context context;
     ArrayList<DbTask> tasks;
-    TasksDb tasksDb;
+    TaskManagementCaller mTaskManager;
     private static LayoutInflater inflater = null;
-    List<String> list;
 
-    public TaskAdapter(Context context, ArrayList<DbTask>  tasks, TasksDb tasksDb) {
+    public TaskAdapter(Context context, ArrayList<DbTask>  tasks, TaskManagementCaller taskManager) {
         // TODO Auto-generated constructor stub
         super();
         this.context = context;
         this.tasks = tasks;
-        this.tasksDb = tasksDb;
+        this.mTaskManager = taskManager;
 
         Comparator<DbTask> myComparator = new Comparator<DbTask>() {
             public int compare(DbTask obj1,DbTask obj2) {
@@ -106,7 +101,6 @@ public class TaskAdapter extends BaseAdapter {
         //DbTask alarmData = (DbTask)getItem(position);
         SimpleDateFormat sdf;
         View rootView = convertView;
-        list = get_task_list();
 
         if (rootView == null)
             rootView = inflater.inflate(R.layout.task_item, parent, false);
@@ -125,7 +119,7 @@ public class TaskAdapter extends BaseAdapter {
         setup_time(parent,tv_time,task,false);
         setup_enable_button(parent, s_enable, task);
         setup_label(parent, tv_label, task);
-        setup_label_task(parent,tv_task,task, list);
+        setup_label_task(parent,tv_task,task);
         //setup_spinner_tasks(parent, spinner_tasks, task, list);
 
 
@@ -142,76 +136,16 @@ public class TaskAdapter extends BaseAdapter {
 
         return rootView;
     }
-    protected List<String> get_task_list()
-    {
-        List<String> l=new ArrayList<String>();
-        l.add(SetChargeLimitRequest.CMD_NAME);
-        l.add(StartHVACRequest.CMD_NAME);
-        l.add(StopHVACRequest.CMD_NAME);
-        l.add(DoorUnlockRequest.CMD_NAME);
-        l.add(DoorLockRequest.CMD_NAME);
-        return l;
-    }
-    protected void setup_label_task(final View view, TextView tv_task, final DbTask task, final List<String> commands)
+
+    protected void setup_label_task(final View view, TextView tv_task, final DbTask task)
     {
         tv_task.setText(task.getTask().getCommandDescription());
         tv_task.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final Dialog selectDialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Select Command");
-
-                ListView modeList = new ListView(view.getContext());
-                final ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, commands);
-
-                modeList.setAdapter(modeAdapter);
-
-
-                builder.setView(modeList);
-//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                selectDialog = builder.create();
-                modeList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapter, View v, int position,
-                                            long arg3)
-                    {
-                        switch (position) {
-                            case TASK_CHARGE:
-                                show_charge_dialog(view,task);
-                                break;
-                            case TASK_HVAC_ON:
-                                task.setTask(new StartHVACRequest(task.getVehicleId(), task.getVehicleName()));
-                                break;
-                            case TASK_HVAC_OFF:
-                                task.setTask(new StopHVACRequest(task.getVehicleId(), task.getVehicleName()));
-                                break;
-                            case TASK_UNLOCK:
-                                task.setTask(new DoorUnlockRequest(task.getVehicleId(), task.getVehicleName()));
-                                break;
-                            case TASK_LOCK:
-                                task.setTask(new DoorLockRequest(task.getVehicleId(), task.getVehicleName()));
-                                break;
-                            default:
-                                break;
-                        }
-                        updateTask(task);
-                        selectDialog.dismiss();
-                    }
-                });
+                final CreateTaskDialog selectDialog;
+                selectDialog = new CreateTaskDialog(view, task, mTaskManager);
                 selectDialog.show();
             }
         });
@@ -374,19 +308,17 @@ public class TaskAdapter extends BaseAdapter {
     }
     protected void updateTask(DbTask task)
     {
-            tasksDb.updateTask(task);
-            TaskAdapter.super.notifyDataSetChanged();
+        mTaskManager.updateTask(task);
     }
     protected void deleteTask(DbTask task)
     {
-        tasksDb.deleteTask(task);
+        mTaskManager.deleteTask(task);
         tasks.remove(task);
         TaskAdapter.super.notifyDataSetChanged();
     }
     public void addTask(DbTask task)
     {
-        tasks.add(task);
-        TaskAdapter.super.notifyDataSetChanged();
+        mTaskManager.addTask(task);
     }
     protected void enableTask(View view, DbTask task)
     {
@@ -454,5 +386,10 @@ public class TaskAdapter extends BaseAdapter {
         });
 
         builder.show();
+    }
+    public interface TaskManagementCaller{
+        void updateTask(DbTask task);
+        void deleteTask(DbTask task);
+        void addTask(DbTask task);
     }
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +31,7 @@ import java.util.ArrayList;
  * Use the {@link ScheduleListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScheduleListFragment extends Fragment {
+public class ScheduleListFragment extends Fragment implements TaskAdapter.TaskManagementCaller{
     private static final String TAG = ScheduleListFragment.class.getSimpleName();
 
     private static final String TITLE = "Schedule";
@@ -51,7 +50,7 @@ public class ScheduleListFragment extends Fragment {
     private TasksDb mTasksDb;
 
     private ListView listview;
-    private TaskAdapter taskAdapter;
+    private TaskAdapter mTaskAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -96,16 +95,16 @@ public class ScheduleListFragment extends Fragment {
         // Add alarm to display in alarmlist
         taskList = getTasks(v.getContext(), mTasksDb);
         // Create alarm listview adapter with current context (this) and alarmlist
-        taskAdapter = new TaskAdapter(v.getContext(), taskList, mTasksDb);
-        setup_fab(v,taskAdapter);
+        mTaskAdapter = new TaskAdapter(v.getContext(), taskList, this);
+        setup_fab(v, mTaskAdapter);
         // Set previous adapter on listview
-        listview.setAdapter(taskAdapter);
+        listview.setAdapter(mTaskAdapter);
         return v;
     }
     public void addTask(View v) {
         DbTask newTask = mTasksDb.createTask(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName(),
                 new StartHVACRequest(userConfig.getSelectedVehicleId(), userConfig.getSelectedVehicleDisplayName()));
-        taskAdapter.addTask(newTask);
+        mTaskAdapter.addTask(newTask);
     }
     private void setup_fab(View v, final TaskAdapter adapter)
     {
@@ -169,6 +168,25 @@ public class ScheduleListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void updateTask(DbTask task) {
+        mTasksDb.updateTask(task);
+        mTaskAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void deleteTask(DbTask task) {
+        mTasksDb.deleteTask(task);
+        taskList.remove(task);
+        mTaskAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void addTask(DbTask task) {
+        taskList.add(task);
+        mTaskAdapter.notifyDataSetChanged();
     }
 
     /**
