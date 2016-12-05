@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,7 +46,7 @@ public class ScheduleListFragment extends Fragment {
 
     private UserConfig userConfig;
     private SharedPreferences mSharedPreferences;
-    private ArrayList<DbTask> taskList;
+    private ArrayList<DbTask> mTaskList;
     private TasksDb mTasksDb;
 
     private ListView listview;
@@ -94,9 +93,9 @@ public class ScheduleListFragment extends Fragment {
         listview = (ListView) v.findViewById(R.id.lv_db_items);
 
         // Add alarm to display in alarmlist
-        taskList = getTasks(v.getContext(), mTasksDb);
+        mTaskList = getTasks(v.getContext(), mTasksDb);
         // Create alarm listview adapter with current context (this) and alarmlist
-        taskAdapter = new TaskAdapter(v.getContext(), taskList, mTasksDb);
+        taskAdapter = new TaskAdapter(v.getContext(), mTaskList, mTasksDb);
         setup_fab(v,taskAdapter);
         // Set previous adapter on listview
         listview.setAdapter(taskAdapter);
@@ -124,7 +123,7 @@ public class ScheduleListFragment extends Fragment {
     {
         mSharedPreferences = MySharedPreferences.getSharedPreferences(context);
         userConfig = new UserConfig(mSharedPreferences);
-
+        ArrayList<DbTask> taskList = new ArrayList<>();
         try {
             //Create the database
             if(userConfig.getSelectedVehicleId() != 0) {
