@@ -120,7 +120,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
             if (listVehicleJsonRequest.processJsonResponse(responseData) == false) {
                 showExitAlert(getContext(), "Unable to process response from server.");
-                //goToLoginActivity();
+                if(responseData.length() <= 0) {
+                    goToLoginActivity();
+                }
                 return;
             }
             if (listVehicleJsonRequest.getVehicles().isEmpty() == true) {
