@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +36,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     public static final String TAG = "MainActivity";
+    public static final String VEHICLE_LIST = "VehicleList";
+
     private TeslaApiClient mTeslaClient;
     private SharedPreferences mSharedPreferences;
     UserConfig userConfig;
@@ -45,12 +48,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null) {
-            // here
+        if (savedInstanceState == null) {
+            vehicles = this.getIntent().getParcelableArrayListExtra(getString(R.string.par_user_vehicle_list));
+        }
+        else {
+            vehicles = savedInstanceState.getParcelableArrayList(VEHICLE_LIST);
+        }
 
-            setContentView(R.layout.activity_main);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+        // here
+
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -60,32 +66,34 @@ public class MainActivity extends AppCompatActivity
 //                        .setAction("Action", null).show();
 //            }
 //        });
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
 
+        mSharedPreferences = MySharedPreferences.getSharedPreferences(this.getApplicationContext());
+        mTeslaClient = new TeslaApiClient(mSharedPreferences);
+        userConfig = new UserConfig(mSharedPreferences);
 
-            mSharedPreferences = MySharedPreferences.getSharedPreferences(this.getApplicationContext());
-            mTeslaClient = new TeslaApiClient(mSharedPreferences);
-            userConfig = new UserConfig(mSharedPreferences);
-            vehicles = this.getIntent().getParcelableArrayListExtra(getString(R.string.par_user_vehicle_list));
 
-            if (mTeslaClient.IsLoggedIn()) {
-                fragmentManager = getFragmentManager();
-                String token = mTeslaClient.getOauthTokenString();
+        if (mTeslaClient.IsLoggedIn()) {
+            fragmentManager = getFragmentManager();
+            String token = mTeslaClient.getOauthTokenString();
 
-                Fragment f = ScheduleListFragment.newInstance();
-                set_fragment(f);
-            }
+            Fragment f = ScheduleListFragment.newInstance();
+            set_fragment(f);
         }
     }
+
 
     @Override
     public void onBackPressed() {
@@ -233,5 +241,11 @@ public class MainActivity extends AppCompatActivity
         Intent myIntent = new Intent(this, target);
         startActivity(myIntent);
         finish();
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelableArrayList(VEHICLE_LIST, vehicles);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 }
