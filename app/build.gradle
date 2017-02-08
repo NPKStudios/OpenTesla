@@ -24,8 +24,8 @@ android {
             proguardFile 'proguard-android.txt'
             targetSdkVersion 24
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 6
-            versionName '1.1.3'
+            versionCode 7
+            versionName '1.1.4'
         }
     }
 }
@@ -38,6 +38,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.google.android.gms:play-services:10.0.0'
+    compile 'com.google.android.gms:play-services:10.0.1'
     testCompile 'junit:junit:4.12'
 }
