@@ -25,8 +25,8 @@ android {
             proguardFile 'proguard-android.txt'
             targetSdkVersion 24
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 9
-            versionName '1.1.6'
+            versionCode 10
+            versionName '1.1.7'
         }
     }
 }
