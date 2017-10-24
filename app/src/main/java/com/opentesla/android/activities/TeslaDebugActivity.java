@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.google.android.gms.ads.AdView;
 import com.opentesla.webtask.GetJsonAsyncTask;
 import com.opentesla.android.MySharedPreferences;
 import com.opentesla.webtask.OnTaskDoneListener;
@@ -35,7 +34,6 @@ public class TeslaDebugActivity extends AppCompatActivity {
     private ArrayList<String> vehicles;
     private ArrayAdapter<String> v_adapter;
     private Spinner v_spinner;
-    private AdView mAdView;
     private int notificationID;
 
     @Override
