@@ -106,7 +106,7 @@ public class VehicleStatusFragment extends Fragment {
             }
             else
             {
-                mTvStatus.setText("Error parsing json");
+                mTvStatus.setText("Error parsing json for vehicle state: " + responseData.toString());
             }
         }
 

@@ -138,7 +138,7 @@ public class ChargeStatusFragment extends Fragment {
             }
             else
             {
-                mTvStatus.setText("Error parsing json");
+                mTvStatus.setText("Error parsing json for battery status: " + responseData.toString());
             }
         }
 
