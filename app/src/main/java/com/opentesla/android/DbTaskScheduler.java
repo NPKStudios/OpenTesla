@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.opentesla.android.backgroundservices.AlarmReceiver;
+import com.opentesla.android.backgroundservices.TaskReceiver;
 import com.opentesla.android.database.DbTask;
 
 /**
@@ -18,7 +18,7 @@ public final class DbTaskScheduler {
     {
         Intent newIntent = getAlarmIntent(context);
         Bundle bundle = new Bundle();
-        bundle.putLong(AlarmReceiver.ARG_PARAM1_DB_ID, task.get_id());
+        bundle.putLong(TaskReceiver.ARG_PARAM1_DB_ID, task.get_id());
         newIntent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int)task.get_id(), newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         //PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), (int)task.get_id(), newIntent, flags);
@@ -26,7 +26,7 @@ public final class DbTaskScheduler {
     }
     public static Intent getAlarmIntent(Context context)
     {
-        return new Intent(context, AlarmReceiver.class);
+        return new Intent(context, TaskReceiver.class);
     }
     public static boolean setAlarm(Context context, DbTask task) {
         if(task.getEnable() == true) {

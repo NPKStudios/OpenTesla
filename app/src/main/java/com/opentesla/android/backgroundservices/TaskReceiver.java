@@ -10,10 +10,10 @@ import android.util.Log;
  * Created by Nick on 10/27/2016.
  */
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class TaskReceiver extends BroadcastReceiver {
     public static final String ARG_PARAM1_DB_ID = BackgroundTaskService.ARG_PARAM1;
 
-    private static final String TAG = AlarmReceiver.class.getSimpleName();
+    private static final String TAG = TaskReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {

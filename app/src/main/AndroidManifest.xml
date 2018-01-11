@@ -37,7 +37,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name="com.opentesla.android.backgroundservices.AlarmReceiver"
+            android:name="com.opentesla.android.backgroundservices.TaskReceiver"
             android:process=":remote"
             />
         <receiver android:name="com.opentesla.android.backgroundservices.MyBootReceiver">

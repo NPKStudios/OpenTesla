@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Parcelable;
@@ -181,6 +182,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_logout:
                 showLogoutAlert(this, "Are you sure you want to logout?");
                 return true;
+            case R.id.nav_contribute:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/NPKStudios/OpenTesla"));
+                startActivity(browserIntent);
+                break;
             case R.id.nav_schedule_list:
                 fragment = ScheduleListFragment.newInstance();
                 break;

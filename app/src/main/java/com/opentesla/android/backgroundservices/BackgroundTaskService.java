@@ -30,9 +30,14 @@ import static android.app.Notification.VISIBILITY_PUBLIC;
  * Created by Nick on 10/28/2016.
  */
 
+/***
+ * Creates a background task for the to send the api commands
+ */
 public class BackgroundTaskService extends Service {
     private static final String TAG = BackgroundTaskService.class.getSimpleName();
     public static final String ARG_PARAM1 = "DB_ID";
+    public static final int DEFAULT_RETRIES = 1;
+
     private boolean isRunning;
     private Context context;
     private Thread backgroundThread;
@@ -69,7 +74,7 @@ public class BackgroundTaskService extends Service {
             //showNotification("DEBUG","STARTING","Starting wake car" + vehicleJsonPost.getClass().getSimpleName());
             wakeUpCarRequest = new WakeUpCarRequest(vehicleJsonPost.getVehicle_id(), vehicleJsonPost.getVehicle_name());
 
-            PostJsonAsyncTask wakeTask = new PostJsonAsyncTask(wakeUpCarRequest.getUrlString(), mOauthToken, new BackgroundTaskService.WakeCarDone(context), wakeUpCarRequest.getBody());
+            PostJsonAsyncTask wakeTask = new PostJsonAsyncTask(wakeUpCarRequest.getUrlString(), mOauthToken, new BackgroundTaskService.WakeCarDone(context,DEFAULT_RETRIES), wakeUpCarRequest.getBody());
             //PostJsonAsyncTask task = new PostJsonAsyncTask(mTeslaClient.(mVehicleID),mTeslaClient.getOauthTokenString(), null, "");
             wakeTask.execute();
 
@@ -84,19 +89,31 @@ public class BackgroundTaskService extends Service {
         }
     };
 
+    /***
+     * Executed after the wake request is performed
+     */
     public class WakeCarDone implements OnTaskDoneListener {
         private Context c;
-        public WakeCarDone(Context c)
+        private int retries;
+        public WakeCarDone(Context c, int retries)
         {
             this.c = c;
+            this.retries = retries;
         }
         @Override
         public void onTaskDone(JSONObject responseData) {
 
             if(responseData == null | (responseData.length() <= 0))
             {
-                showNotification("Command", "Error", "Failed to communicate with server");
-                Log.d(TAG, "Failed to communicate with server");
+                if(this.retries > 0 )
+                {
+                    Log.d(TAG, "Failed to communicate with server, Retries left: " + this.retries);
+                    retry();
+                }
+                else {
+                    showNotification("Command", "Error", "Failed to communicate with server");
+                    Log.d(TAG, "Failed to communicate with server");
+                }
             }
             else if(wakeUpCarRequest.processJsonResponse(responseData) == true)
             {
@@ -104,11 +121,17 @@ public class BackgroundTaskService extends Service {
                 {
                     //Setup setcharge limit
                     showNotification("Command", "Success", "Woke Tesla");
-                    PostJsonAsyncTask vehicleTask = new PostJsonAsyncTask(vehicleJsonPost.getUrlString(), mOauthToken, new BackgroundTaskService.VehiclePostDone(context), vehicleJsonPost.getBody());
+                    PostJsonAsyncTask vehicleTask = new PostJsonAsyncTask(vehicleJsonPost.getUrlString(), mOauthToken, new BackgroundTaskService.VehiclePostDone(context, DEFAULT_RETRIES), vehicleJsonPost.getBody());
                     vehicleTask.execute();
+                }
+                else if(retries > 0)
+                {
+                    Log.d(TAG, "Failed to wake car, Retries left: " + retries);
+                    retry();
                 }
                 else
                 {
+                    Log.d(TAG, "Failed to wake car");
                     showNotification("Sending Command", "Error", "Failed to wake up the car");
                 }
             }
@@ -118,36 +141,59 @@ public class BackgroundTaskService extends Service {
                 Log.e(TAG, "Failed to parse JSON: " + responseData.toString());
             }
         }
+        private  void retry()
+        {
+            //Create wake car request
+            showNotification("Retying Command", "Retry", "Trying to wake the car again");
+            wakeUpCarRequest = new WakeUpCarRequest(vehicleJsonPost.getVehicle_id(), vehicleJsonPost.getVehicle_name());
+
+            //Create wake car task
+            PostJsonAsyncTask wakeTask = new PostJsonAsyncTask(wakeUpCarRequest.getUrlString(), mOauthToken, new BackgroundTaskService.WakeCarDone(context, this.retries--), wakeUpCarRequest.getBody());
+
+            //Executes task
+            wakeTask.execute();
+        }
 
         @Override
         public void onError(String error) {
-
+            Log.e(TAG, error);
         }
     }
 
+
     public class VehiclePostDone implements OnTaskDoneListener {
         private Context c;
-        public VehiclePostDone(Context c)
+        private int retries;
+        public VehiclePostDone(Context c, int retries)
         {
             this.c = c;
+            this.retries=retries;
         }
         @Override
         public void onTaskDone(JSONObject responseData) {
 
             if(responseData == null | (responseData.length() <= 0))
             {
-                showNotification("Command", "Error", "Failed to communicate with server");
-                Log.d(TAG, "Failed to communicate with server");
+                if(this.retries > 0 )
+                {
+                    Log.d(TAG, "Failed to communicate with server, Retries left: " + this.retries);
+                    retry();
+                }
+                else {
+                    showNotification("Command", "Error", "Failed to communicate with server");
+                    Log.d(TAG, "Failed to communicate with server");
+                }
             }
             else if(vehicleJsonPost.processJsonResponse(responseData) == true)
             {
                 if(vehicleJsonPost.getResult())
                 {
-                    //Setup setcharge limit
+                    //Successfully sent command
                     showNotification("Command Success", vehicleJsonPost.getCommandName(), vehicleJsonPost.getResultString());
                 }
                 else
                 {
+                    //Command sent but not successful
                     showNotification("Sending Success", vehicleJsonPost.getCommandName(), vehicleJsonPost.getResultString());
                 }
             }
@@ -158,9 +204,19 @@ public class BackgroundTaskService extends Service {
             }
         }
 
+        private  void retry()
+        {
+            //Show notification
+            showNotification("Retying Command", "Retry", "Trying " + vehicleJsonPost.getCommandName() + " again");
+            //create new task
+            PostJsonAsyncTask vehicleTask = new PostJsonAsyncTask(vehicleJsonPost.getUrlString(), mOauthToken, new BackgroundTaskService.VehiclePostDone(context, this.retries--), vehicleJsonPost.getBody());
+            //launch task
+            vehicleTask.execute();
+        }
+
         @Override
         public void onError(String error) {
-
+            Log.e(TAG, error);
         }
     }
 
@@ -204,6 +260,12 @@ public class BackgroundTaskService extends Service {
         return START_STICKY;
     }
 
+    /***
+     * Shows a nitification to on the device
+     * @param ticker The ticker string
+     * @param contentTitle The content title
+     * @param content The content to be displayed
+     */
     private void showNotification(String ticker, String contentTitle, String content)
     {
         //Ticker
