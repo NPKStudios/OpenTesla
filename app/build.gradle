@@ -26,8 +26,8 @@ android {
             proguardFile 'proguard-android.txt'
             targetSdkVersion 24
             testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-            versionCode 10
-            versionName '1.1.7'
+            versionCode 11
+            versionName '1.1.8'
             dimension "Progaurd"
         }
     }
@@ -41,7 +41,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
-    compile ('com.google.android.gms:play-services:10.0.1'){
+    compile('com.google.android.gms:play-services:10.0.1') {
         exclude group: 'com.google.android.gms', module: 'ads'
     }
     testCompile 'junit:junit:4.12'
