@@ -36,7 +36,7 @@ import static android.app.Notification.VISIBILITY_PUBLIC;
 public class BackgroundTaskService extends Service {
     private static final String TAG = BackgroundTaskService.class.getSimpleName();
     public static final String ARG_PARAM1 = "DB_ID";
-    public static final int DEFAULT_RETRIES = 1;
+    public static final int DEFAULT_RETRIES = 2;
 
     private boolean isRunning;
     private Context context;
@@ -102,18 +102,13 @@ public class BackgroundTaskService extends Service {
         }
         @Override
         public void onTaskDone(JSONObject responseData) {
-
+            String message = "";
+            boolean failed = false;
             if(responseData == null | (responseData.length() <= 0))
             {
-                if(this.retries > 0 )
-                {
-                    Log.d(TAG, "Failed to communicate with server, Retries left: " + this.retries);
-                    retry();
-                }
-                else {
-                    showNotification("Command", "Error", "Failed to communicate with server");
-                    Log.d(TAG, "Failed to communicate with server");
-                }
+                Log.d(TAG, "Failed to communicate with server, Retries left: " + this.retries);
+                message = "Failed to communicate with server. ";
+                failed = true;
             }
             else if(wakeUpCarRequest.processJsonResponse(responseData) == true)
             {
@@ -126,25 +121,32 @@ public class BackgroundTaskService extends Service {
                 }
                 else if(retries > 0)
                 {
-                    Log.d(TAG, "Failed to wake car, Retries left: " + retries);
-                    retry();
-                }
-                else
-                {
                     Log.d(TAG, "Failed to wake car");
-                    showNotification("Sending Command", "Error", "Failed to wake up the car");
+                    message = "Failed to wake car. ";
+                    failed = true;
                 }
             }
             else
             {
-                showNotification("Sending Command", "Error", "Failed to parse JSON: " + responseData.toString());
                 Log.e(TAG, "Failed to parse JSON: " + responseData.toString());
+                message = "Failed to parse JSON: " + responseData.toString() + ". ";
+                failed = true;
+            }
+            if(failed) {
+                if(retries>0) {
+                    retry(message);
+                }
+                else
+                {
+                    showNotification("Sending Command", "Failed", message);
+                }
             }
         }
-        private  void retry()
+        private  void retry(String message)
         {
             //Create wake car request
-            showNotification("Retying Command", "Retry", "Trying to wake the car again");
+            Log.d(TAG, "Retrying: "+ message + "Trying to wake the car again, Retries left: " + retries);
+            showNotification("Retying Command", "Retry", message + "Trying to wake the car again, Retries left: " + retries);
             wakeUpCarRequest = new WakeUpCarRequest(vehicleJsonPost.getVehicle_id(), vehicleJsonPost.getVehicle_name());
 
             //Create wake car task
@@ -171,18 +173,13 @@ public class BackgroundTaskService extends Service {
         }
         @Override
         public void onTaskDone(JSONObject responseData) {
-
+            boolean failed = false;
+            String message = "";
             if(responseData == null | (responseData.length() <= 0))
             {
-                if(this.retries > 0 )
-                {
-                    Log.d(TAG, "Failed to communicate with server, Retries left: " + this.retries);
-                    retry();
-                }
-                else {
-                    showNotification("Command", "Error", "Failed to communicate with server");
-                    Log.d(TAG, "Failed to communicate with server");
-                }
+                Log.d(TAG, "Failed to communicate with server, Retries left: " + this.retries);
+                message = "Failed to communicate with server. ";
+                failed = true;
             }
             else if(vehicleJsonPost.processJsonResponse(responseData) == true)
             {
@@ -194,20 +191,33 @@ public class BackgroundTaskService extends Service {
                 else
                 {
                     //Command sent but not successful
-                    showNotification("Sending Success", vehicleJsonPost.getCommandName(), vehicleJsonPost.getResultString());
+                    message = vehicleJsonPost.getResultString() + ". ";
+                    failed = true;
                 }
             }
             else
             {
-                showNotification("Sending Command", "Failed", "Failed to parse JSON: " + responseData.toString());
+                message = "Failed to parse JSON: " + responseData.toString() + ". ";
                 Log.e(TAG, "Failed to parse JSON: " + responseData.toString());
+                failed = true;
+            }
+            if(failed) {
+                if(retries>0) {
+                    retry(message);
+                }
+                else
+                {
+                    showNotification("Sending Command", "Failed", message);
+                }
             }
         }
 
-        private  void retry()
+        private  void retry(String message)
         {
+
+            Log.d(TAG, message+ "Retrying: " + vehicleJsonPost.getCommandName() + ". Retries left: " + this.retries);
             //Show notification
-            showNotification("Retying Command", "Retry", "Trying " + vehicleJsonPost.getCommandName() + " again");
+            showNotification("Retying Command", "Retry", message+ "Retrying " + vehicleJsonPost.getCommandName() + ". Retries left: " + this.retries);
             //create new task
             PostJsonAsyncTask vehicleTask = new PostJsonAsyncTask(vehicleJsonPost.getUrlString(), mOauthToken, new BackgroundTaskService.VehiclePostDone(context, this.retries--), vehicleJsonPost.getBody());
             //launch task
@@ -279,7 +289,8 @@ public class BackgroundTaskService extends Service {
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_square);
         mBuilder.setLargeIcon(bm);
 // Sets an ID for the notification
-        int mNotificationId = 001;
+        //Random number plus current time to create notification
+        int mNotificationId =365 + ((int) System.currentTimeMillis());
 // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
