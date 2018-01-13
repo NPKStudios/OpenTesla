@@ -10,3 +10,4 @@
 /app/src/main/res/*.db
 *.db
 /app/app-Progaurd-release.apk
+*.apk
